@@ -39,6 +39,7 @@ object SimpleConductRClusterApp {
     val instanceId = scala.util.Random.alphanumeric.take(5).mkString
 
     log.info("Starting instance {}", instanceId)
+    log.info("MyConfigParam: {}", config.getString("app.myConfigParam"))
 
     /**
       * Create an actor that handles cluster domain events
