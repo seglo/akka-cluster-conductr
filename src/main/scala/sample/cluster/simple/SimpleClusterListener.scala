@@ -9,7 +9,7 @@ class SimpleClusterListener extends Actor with ActorLogging {
 
   val cluster = Cluster(context.system)
 
-  // subscribe to cluster changes, re-subscribe when restart 
+  // subscribe to cluster changes, re-subscribe when restart
   override def preStart(): Unit = {
     cluster.subscribe(self, initialStateMode = InitialStateAsEvents,
       classOf[MemberEvent], classOf[UnreachableMember])
@@ -17,6 +17,8 @@ class SimpleClusterListener extends Actor with ActorLogging {
   override def postStop(): Unit = cluster.unsubscribe(self)
 
   def receive = {
+    case SimpleConductRClusterApp.Ready =>
+      sender() ! akka.Done
     case MemberUp(member) =>
       log.info("Member is Up: {}", member.address)
     case UnreachableMember(member) =>
